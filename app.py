@@ -197,6 +197,56 @@ if uploaded_file is not None:
 
                 st.plotly_chart(fig5, use_container_width=True)
 
+
+            # -------------------------
+            # Next 30 Days Prediction
+            # -------------------------
+
+            st.subheader("Next 30 Days Prediction")
+
+            last_price = df['Close'].iloc[-1]
+
+            predictions = []
+
+            current_price = last_price
+
+            # Generate Predictions
+            for i in range(30):
+
+                change_percent = np.random.normal(0, 0.02)
+
+                current_price = current_price * (1 + change_percent)
+
+                predictions.append(current_price)
+
+            # Create Future Dates
+            future_dates = pd.date_range(
+                start=pd.Timestamp.today(),
+                periods=30,
+                freq='D'
+            )
+
+            # Create Prediction DataFrame
+            forecast_df = pd.DataFrame({
+                'Date': future_dates,
+                'Predicted Price': predictions
+            })
+
+            # Show Prediction Table
+            st.subheader("Predicted Prices")
+
+            st.dataframe(forecast_df, use_container_width=True)
+
+            # Forecast Chart
+            fig_forecast = px.line(
+                forecast_df,
+                x='Date',
+                y='Predicted Price',
+                title='Next 30 Days Forecast',
+                template='plotly_dark'
+            )
+
+            st.plotly_chart(fig_forecast, use_container_width=True)
             # -------------------------
             # Raw Data
             # -------------------------
